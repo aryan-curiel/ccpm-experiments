@@ -1,6 +1,17 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react"
 
 const config = defineConfig({
+  globalCss: {
+    'html, body': {
+      transition: 'background 0.25s ease, color 0.25s ease',
+    },
+    '::-webkit-scrollbar': { width: '4px', height: '4px' },
+    '::-webkit-scrollbar-track': { background: 'transparent' },
+    '::-webkit-scrollbar-thumb': {
+      background: '{colors.border.2}',
+      borderRadius: '2px',
+    },
+  },
   theme: {
     tokens: {
       colors: {
