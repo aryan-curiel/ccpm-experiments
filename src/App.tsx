@@ -1,7 +1,7 @@
 import { useState, type ReactElement } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Box, Button, Flex, Text } from '@chakra-ui/react'
 import { ReasoningScreen } from '@/components/reasoning/ReasoningScreen'
+import SubhubDashboard from '@/pages/SubhubDashboard'
 
 type Screen = 'reasoning' | 'dashboard'
 
@@ -15,7 +15,7 @@ function App(): ReactElement {
   const [screen, setScreen] = useState<Screen>('reasoning')
   const [isDark, setIsDark] = useState(true)
 
-  function toggleColorMode(): void {
+  function toggleTheme(): void {
     const next = !isDark
     setIsDark(next)
     if (next) {
@@ -27,14 +27,6 @@ function App(): ReactElement {
     }
   }
 
-  function goToDashboard(): void {
-    setScreen('dashboard')
-  }
-
-  function rerunAnalysis(): void {
-    setScreen('reasoning')
-  }
-
   return (
     <AnimatePresence mode="wait">
       {screen === 'reasoning' ? (
@@ -44,10 +36,11 @@ function App(): ReactElement {
           initial="initial"
           animate="animate"
           exit="exit"
+          style={{ position: 'fixed', inset: 0 }}
         >
           <ReasoningScreen
-            onSkip={goToDashboard}
-            onLaunch={goToDashboard}
+            onSkip={() => setScreen('dashboard')}
+            onLaunch={() => setScreen('dashboard')}
           />
         </motion.div>
       ) : (
@@ -58,87 +51,11 @@ function App(): ReactElement {
           animate="animate"
           exit="exit"
         >
-          {/* Dashboard placeholder — will be replaced by the subhub-dashboard epic */}
-          <Box
-            minH="100vh"
-            bg="bg.canvas"
-            display="flex"
-            flexDirection="column"
-          >
-            {/* Header bar */}
-            <Flex
-              as="header"
-              align="center"
-              justify="space-between"
-              px="6"
-              py="3"
-              borderBottom="1px solid"
-              borderColor="border.1"
-              bg="surface.1"
-            >
-              <Text
-                fontFamily="heading"
-                fontWeight="700"
-                fontSize="lg"
-                color="text.primary"
-                letterSpacing="tight"
-              >
-                SubHub Intelligence
-              </Text>
-
-              <Flex align="center" gap="3">
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  color="text.secondary"
-                  _hover={{ color: 'text.primary', bg: 'surface.2' }}
-                  fontFamily="mono"
-                  fontSize="xs"
-                  letterSpacing="wide"
-                  onClick={rerunAnalysis}
-                >
-                  ↺ Re-run analysis
-                </Button>
-
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  color="text.secondary"
-                  _hover={{ color: 'text.primary', bg: 'surface.2' }}
-                  fontFamily="mono"
-                  fontSize="xs"
-                  onClick={toggleColorMode}
-                >
-                  {isDark ? '☀' : '◐'}
-                </Button>
-              </Flex>
-            </Flex>
-
-            {/* Dashboard placeholder content */}
-            <Flex
-              flex={1}
-              align="center"
-              justify="center"
-              direction="column"
-              gap="4"
-            >
-              <Text
-                fontFamily="mono"
-                fontSize="sm"
-                color="text.muted"
-                letterSpacing="wide"
-              >
-                Dashboard — coming soon (subhub-dashboard epic)
-              </Text>
-              <Text
-                fontFamily="mono"
-                fontSize="xs"
-                color="text.muted"
-              >
-                mil-v3.0 · expansionjs · role: PM
-              </Text>
-            </Flex>
-          </Box>
+          <SubhubDashboard
+            onRerun={() => setScreen('reasoning')}
+            onThemeToggle={toggleTheme}
+            isDark={isDark}
+          />
         </motion.div>
       )}
     </AnimatePresence>

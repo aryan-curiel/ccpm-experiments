@@ -1,9 +1,11 @@
 import { useState, useEffect, type ReactElement } from 'react'
-import { Box, Grid, GridItem, Flex, Text } from '@chakra-ui/react'
+import { Box, Grid, GridItem, Flex } from '@chakra-ui/react'
 import { AppHeader, StatCard, StagePerformance, SubcontractorLeague, PriorityProjects } from '@/components/subhub'
 import { SectionLabel } from '@/components/shared'
+import { ActionQueue } from '@/components/action-queue/ActionQueue'
 import { getStats, getStageMetrics, getSubcontractors, getPriorityProjects } from '@/api'
 import type { SubHubStats, StageMetric, Subcontractor, Project } from '@/types/subhub'
+// Note: Text removed — no longer used after ActionQueue replaced the placeholder
 
 interface SubhubDashboardProps {
   onRerun: () => void
@@ -103,7 +105,7 @@ export default function SubhubDashboard({ onRerun, onThemeToggle, isDark = true 
               </Box>
             )}
 
-            {/* Action Queue placeholder */}
+            {/* Action Queue */}
             <Box
               p="5"
               borderRadius="xl"
@@ -111,12 +113,10 @@ export default function SubhubDashboard({ onRerun, onThemeToggle, isDark = true 
               borderColor="border.1"
               bg="surface.1"
             >
-              <Box mb="3">
+              <Box mb="4">
                 <SectionLabel>Action Queue</SectionLabel>
               </Box>
-              <Text fontSize="sm" color="text.muted" fontFamily="mono">
-                Action Queue — action-queue epic coming soon
-              </Text>
+              <ActionQueue />
             </Box>
           </Flex>
         </GridItem>
