@@ -1,12 +1,15 @@
-import { useState } from 'react'
-import { Box, Button, Text } from '@chakra-ui/react'
+import { useState, type ReactElement } from 'react'
+import { Box, Flex, Text, IconButton } from '@chakra-ui/react'
+import { ActionQueue } from '@/components/action-queue/ActionQueue'
 
-function App() {
-  // Chakra v3 uses CSS class-based color mode.
-  // `.dark` on <html> activates `_dark` semantic tokens; no class = light mode.
+// Note: This epic delivers ActionQueue in isolation.
+// Full dashboard integration (with AppHeader, SubhubDashboard) happens when
+// epic/subhub-dashboard and epic/action-queue are both merged to main.
+
+export default function App(): ReactElement {
   const [isDark, setIsDark] = useState(true)
 
-  function toggleColorMode() {
+  function toggleTheme(): void {
     const next = !isDark
     setIsDark(next)
     if (next) {
@@ -19,58 +22,46 @@ function App() {
   }
 
   return (
-    <Box
-      minH="100vh"
-      bg="bg.canvas"
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      gap={6}
-    >
-      <Text
-        fontFamily="heading"
-        fontWeight="800"
-        fontSize="3xl"
-        color="text.primary"
-        letterSpacing="tight"
+    <Box minH="100vh" bg="bg.canvas">
+      {/* Minimal header for isolated testing */}
+      <Flex
+        as="header"
+        align="center"
+        justify="space-between"
+        px="6"
+        py="3"
+        borderBottom="1px solid"
+        borderColor="border.1"
+        bg="surface.1"
+        position="sticky"
+        top={0}
+        zIndex={100}
       >
-        MIL — SubHub Intelligence
-      </Text>
+        <Text
+          fontFamily="heading"
+          fontSize="sm"
+          fontWeight="700"
+          color="text.primary"
+          letterSpacing="tight"
+        >
+          SubHub Intelligence · Action Queue
+        </Text>
+        <IconButton
+          size="sm"
+          variant="ghost"
+          aria-label="Toggle theme"
+          color="text.secondary"
+          _hover={{ color: 'text.primary', bg: 'surface.2' }}
+          onClick={toggleTheme}
+        >
+          <Text fontSize="sm">{isDark ? '☀' : '◐'}</Text>
+        </IconButton>
+      </Flex>
 
-      <Text
-        fontFamily="body"
-        fontWeight="400"
-        fontSize="md"
-        color="text.secondary"
-      >
-        Management Intelligence Layer · v3.0.1
-      </Text>
-
-      <Text
-        fontFamily="mono"
-        fontWeight="400"
-        fontSize="sm"
-        color="text.muted"
-      >
-        {isDark ? 'Dark mode active (#04070e)' : 'Light mode active (#eff3ff)'}
-      </Text>
-
-      <Button
-        onClick={toggleColorMode}
-        bg="brand.500"
-        color="white"
-        fontFamily="body"
-        fontWeight="600"
-        px={6}
-        py={3}
-        borderRadius="md"
-        _hover={{ bg: 'brand.300' }}
-      >
-        Toggle {isDark ? 'Light' : 'Dark'} Mode
-      </Button>
+      {/* ActionQueue panel */}
+      <Box maxW="720px" mx="auto" px={{ base: '4', md: '6' }} py="6">
+        <ActionQueue />
+      </Box>
     </Box>
   )
 }
-
-export default App
