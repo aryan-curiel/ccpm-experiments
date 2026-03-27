@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, type ReactElement } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Box } from '@chakra-ui/react'
 
@@ -24,7 +24,7 @@ const CURSOR_STYLES = `
   }
 `
 
-export function StreamLog({ lines, visibleCount }: StreamLogProps): JSX.Element {
+export function StreamLog({ lines, visibleCount }: StreamLogProps): ReactElement {
   const bottomRef = useRef<HTMLDivElement>(null)
   const visibleLines = lines.slice(0, visibleCount)
 
@@ -40,7 +40,7 @@ export function StreamLog({ lines, visibleCount }: StreamLogProps): JSX.Element 
       fontFamily="mono"
       fontSize="xs"
       lineHeight="tall"
-      color="text.secondary"
+      color="text.primary"
       css={{
         '&::-webkit-scrollbar': { width: '3px' },
         '&::-webkit-scrollbar-thumb': { background: 'var(--chakra-colors-border-2)', borderRadius: '2px' },

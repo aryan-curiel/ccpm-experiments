@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion'
+import { type ReactElement } from 'react'
+import { motion, type Variants } from 'framer-motion'
 import { Box, Flex, Text } from '@chakra-ui/react'
 import type { TaskState } from '@/hooks/useReasoningSequence'
 
@@ -21,17 +22,17 @@ const SPINNER_STYLES = `
   }
 `
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.05 } },
 }
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, x: -8 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.2, ease: 'easeOut' } },
+  show: { opacity: 1, x: 0 },
 }
 
-function TaskIcon({ status }: { status: TaskState['status'] }): JSX.Element {
+function TaskIcon({ status }: { status: TaskState['status'] }): ReactElement {
   if (status === 'done') {
     return (
       <Box
@@ -72,7 +73,7 @@ function TaskIcon({ status }: { status: TaskState['status'] }): JSX.Element {
   )
 }
 
-export function TaskChecklist({ tasks }: TaskChecklistProps): JSX.Element {
+export function TaskChecklist({ tasks }: TaskChecklistProps): ReactElement {
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="show">
       {tasks.map(task => {
@@ -80,7 +81,11 @@ export function TaskChecklist({ tasks }: TaskChecklistProps): JSX.Element {
         const isRunning = task.status === 'running'
 
         return (
-          <motion.div key={task.id} variants={itemVariants}>
+          <motion.div
+            key={task.id}
+            variants={itemVariants}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+          >
             <Flex
               align="center"
               gap="8px"
@@ -88,7 +93,7 @@ export function TaskChecklist({ tasks }: TaskChecklistProps): JSX.Element {
               py="1.5"
               borderRadius="md"
               mb="1"
-              bg={isRunning ? 'bg.elevated' : 'transparent'}
+              bg={isRunning ? 'surface.2' : 'transparent'}
               transition="background 0.2s ease"
             >
               <TaskIcon status={task.status} />
@@ -98,7 +103,6 @@ export function TaskChecklist({ tasks }: TaskChecklistProps): JSX.Element {
                 color={isRunning ? 'text.primary' : 'text.muted'}
                 opacity={isDone ? 0.5 : 1}
                 textDecoration={isDone ? 'line-through' : 'none'}
-                transition="all 0.3s ease"
                 flex={1}
               >
                 {task.label}

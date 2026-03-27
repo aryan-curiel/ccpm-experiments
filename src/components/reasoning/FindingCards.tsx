@@ -1,15 +1,13 @@
+import { type ReactElement } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Box, Flex, Text } from '@chakra-ui/react'
 import type { FindingType } from '@/types/subhub'
+import type { FindingEntry } from '@/data/reasoning'
 
-export interface Finding {
-  id: string
-  severity: FindingType
-  text: string
-}
+export type { FindingEntry as Finding }
 
 interface FindingCardsProps {
-  findings: Finding[]
+  findings: FindingEntry[]
   visibleCount: number
 }
 
@@ -20,7 +18,7 @@ const SEVERITY_CONFIG: Record<FindingType, { icon: string; color: string; label:
   info:     { icon: 'ℹ', color: 'blue.400',    label: 'INFO'     },
 }
 
-export function FindingCards({ findings, visibleCount }: FindingCardsProps): JSX.Element {
+export function FindingCards({ findings, visibleCount }: FindingCardsProps): ReactElement {
   const visibleFindings = findings.slice(0, visibleCount)
 
   return (
@@ -41,7 +39,7 @@ export function FindingCards({ findings, visibleCount }: FindingCardsProps): JSX
                 borderRadius="lg"
                 border="1px solid"
                 borderColor="border.1"
-                bg="bg.elevated"
+                bg="surface.2"
                 backdropFilter="blur(8px)"
               >
                 <Flex align="center" gap="2" mb="1">

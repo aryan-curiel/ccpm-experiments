@@ -1,12 +1,21 @@
-import { useState } from 'react'
-import { Box, Button, Text } from '@chakra-ui/react'
+import { useState, type ReactElement } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Box, Button, Flex, Text } from '@chakra-ui/react'
+import { ReasoningScreen } from '@/components/reasoning/ReasoningScreen'
 
-function App() {
-  // Chakra v3 uses CSS class-based color mode.
-  // `.dark` on <html> activates `_dark` semantic tokens; no class = light mode.
+type Screen = 'reasoning' | 'dashboard'
+
+const screenVariants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1, transition: { duration: 0.3 } },
+  exit:    { opacity: 0, transition: { duration: 0.3 } },
+}
+
+function App(): ReactElement {
+  const [screen, setScreen] = useState<Screen>('reasoning')
   const [isDark, setIsDark] = useState(true)
 
-  function toggleColorMode() {
+  function toggleColorMode(): void {
     const next = !isDark
     setIsDark(next)
     if (next) {
@@ -18,58 +27,121 @@ function App() {
     }
   }
 
+  function goToDashboard(): void {
+    setScreen('dashboard')
+  }
+
+  function rerunAnalysis(): void {
+    setScreen('reasoning')
+  }
+
   return (
-    <Box
-      minH="100vh"
-      bg="bg.canvas"
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      gap={6}
-    >
-      <Text
-        fontFamily="heading"
-        fontWeight="800"
-        fontSize="3xl"
-        color="text.primary"
-        letterSpacing="tight"
-      >
-        MIL — SubHub Intelligence
-      </Text>
+    <AnimatePresence mode="wait">
+      {screen === 'reasoning' ? (
+        <motion.div
+          key="reasoning"
+          variants={screenVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
+          <ReasoningScreen
+            onSkip={goToDashboard}
+            onLaunch={goToDashboard}
+          />
+        </motion.div>
+      ) : (
+        <motion.div
+          key="dashboard"
+          variants={screenVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
+          {/* Dashboard placeholder — will be replaced by the subhub-dashboard epic */}
+          <Box
+            minH="100vh"
+            bg="bg.canvas"
+            display="flex"
+            flexDirection="column"
+          >
+            {/* Header bar */}
+            <Flex
+              as="header"
+              align="center"
+              justify="space-between"
+              px="6"
+              py="3"
+              borderBottom="1px solid"
+              borderColor="border.1"
+              bg="surface.1"
+            >
+              <Text
+                fontFamily="heading"
+                fontWeight="700"
+                fontSize="lg"
+                color="text.primary"
+                letterSpacing="tight"
+              >
+                SubHub Intelligence
+              </Text>
 
-      <Text
-        fontFamily="body"
-        fontWeight="400"
-        fontSize="md"
-        color="text.secondary"
-      >
-        Management Intelligence Layer · v3.0.1
-      </Text>
+              <Flex align="center" gap="3">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  color="text.secondary"
+                  _hover={{ color: 'text.primary', bg: 'surface.2' }}
+                  fontFamily="mono"
+                  fontSize="xs"
+                  letterSpacing="wide"
+                  onClick={rerunAnalysis}
+                >
+                  ↺ Re-run analysis
+                </Button>
 
-      <Text
-        fontFamily="mono"
-        fontWeight="400"
-        fontSize="sm"
-        color="text.muted"
-      >
-        {isDark ? 'Dark mode active (#04070e)' : 'Light mode active (#eff3ff)'}
-      </Text>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  color="text.secondary"
+                  _hover={{ color: 'text.primary', bg: 'surface.2' }}
+                  fontFamily="mono"
+                  fontSize="xs"
+                  onClick={toggleColorMode}
+                >
+                  {isDark ? '☀' : '◐'}
+                </Button>
+              </Flex>
+            </Flex>
 
-      <Button
-        onClick={toggleColorMode}
-        bg="brand.500"
-        color="white"
-        fontFamily="body"
-        fontWeight="600"
-        px={6}
-        py={3}
-        borderRadius="md"
-        _hover={{ bg: 'brand.300' }}
-      >
-        Toggle {isDark ? 'Light' : 'Dark'} Mode
-      </Button>
-    </Box>
+            {/* Dashboard placeholder content */}
+            <Flex
+              flex={1}
+              align="center"
+              justify="center"
+              direction="column"
+              gap="4"
+            >
+              <Text
+                fontFamily="mono"
+                fontSize="sm"
+                color="text.muted"
+                letterSpacing="wide"
+              >
+                Dashboard — coming soon (subhub-dashboard epic)
+              </Text>
+              <Text
+                fontFamily="mono"
+                fontSize="xs"
+                color="text.muted"
+              >
+                mil-v3.0 · expansionjs · role: PM
+              </Text>
+            </Flex>
+          </Box>
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }
 

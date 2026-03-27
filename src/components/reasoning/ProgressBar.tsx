@@ -1,3 +1,4 @@
+import { type ReactElement } from 'react'
 import { motion } from 'framer-motion'
 import { Box, Flex, Text } from '@chakra-ui/react'
 
@@ -6,7 +7,7 @@ interface ProgressBarProps {
   isComplete: boolean
 }
 
-export function ProgressBar({ progress, isComplete }: ProgressBarProps): JSX.Element {
+export function ProgressBar({ progress, isComplete }: ProgressBarProps): ReactElement {
   const label = isComplete
     ? 'Analysis complete'
     : `Analysing… ${Math.floor(progress)}%`
@@ -27,7 +28,7 @@ export function ProgressBar({ progress, isComplete }: ProgressBarProps): JSX.Ele
       <Box
         w="full"
         h="3px"
-        bg="bg.elevated"
+        bg="surface.3"
         borderRadius="full"
         overflow="hidden"
       >

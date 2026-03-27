@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { STREAM_LINES, TASK_SCHEDULE, FINDINGS } from '@/data/reasoning'
-import type { TaskScheduleEntry } from '@/data/reasoning'
+import type { TaskScheduleEntry, FindingEntry } from '@/data/reasoning'
 
 export type TaskStatus = 'pending' | 'running' | 'done'
 
@@ -12,11 +12,13 @@ export interface TaskState {
 
 interface UseReasoningSequenceOptions {
   onComplete: () => void
+  findings?: FindingEntry[]  // optional override from API
 }
 
-interface UseReasoningSequenceReturn {
+export interface UseReasoningSequenceReturn {
   visibleLines: number
   tasks: TaskState[]
+  findings: FindingEntry[]
   visibleFindings: number
   progress: number
   isComplete: boolean
@@ -25,16 +27,23 @@ interface UseReasoningSequenceReturn {
 
 const TOTAL_DURATION_MS = 14_000
 const PROGRESS_TICK_MS = 50
-const PROGRESS_INCREMENT = 100 / (TOTAL_DURATION_MS / PROGRESS_TICK_MS) // ~0.36 per tick
-const LINE_INTERVAL_MS = 500
+const PROGRESS_INCREMENT = 100 / (TOTAL_DURATION_MS / PROGRESS_TICK_MS)
+const LINE_INTERVAL_MS = 600
 const FINDING_START_MS = 4_000
-const FINDING_INTERVAL_MS = 2_000
+const FINDING_INTERVAL_MS = 1_800
 
 function buildInitialTasks(schedule: TaskScheduleEntry[]): TaskState[] {
-  return schedule.map(entry => ({ id: entry.id, label: entry.label, status: 'pending' }))
+  return schedule.map(entry => ({
+    id: entry.id,
+    label: entry.label,
+    status: 'pending',
+  }))
 }
 
-export function useReasoningSequence({ onComplete }: UseReasoningSequenceOptions): UseReasoningSequenceReturn {
+export function useReasoningSequence({
+  onComplete,
+  findings: findingsOverride,
+}: UseReasoningSequenceOptions): UseReasoningSequenceReturn {
   const timeouts = useRef<ReturnType<typeof setTimeout>[]>([])
 
   const [visibleLines, setVisibleLines] = useState(0)
@@ -43,26 +52,27 @@ export function useReasoningSequence({ onComplete }: UseReasoningSequenceOptions
   const [progress, setProgress] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
 
+  const findings = findingsOverride ?? FINDINGS
+
   const onCompleteRef = useRef(onComplete)
   useEffect(() => { onCompleteRef.current = onComplete }, [onComplete])
 
-  const rt = useCallback((fn: () => void, delay: number) => {
+  const rt = useCallback((fn: () => void, delay: number): void => {
     timeouts.current.push(setTimeout(fn, delay))
   }, [])
 
-  const clearAll = useCallback(() => {
+  const clearAll = useCallback((): void => {
     timeouts.current.forEach(clearTimeout)
     timeouts.current = []
   }, [])
 
-  const runSequence = useCallback(() => {
+  const runSequence = useCallback((): void => {
     // Stream lines — one every LINE_INTERVAL_MS
-    const lineCount = STREAM_LINES.length
-    for (let i = 0; i < lineCount; i++) {
+    STREAM_LINES.forEach((_, i) => {
       rt(() => setVisibleLines(i + 1), LINE_INTERVAL_MS * (i + 1))
-    }
+    })
 
-    // Task state transitions driven by TASK_SCHEDULE
+    // Task transitions
     for (const entry of TASK_SCHEDULE) {
       rt(() => {
         setTasks(prev =>
@@ -76,13 +86,12 @@ export function useReasoningSequence({ onComplete }: UseReasoningSequenceOptions
       }, entry.endOffset)
     }
 
-    // Findings — revealed one every FINDING_INTERVAL_MS starting at FINDING_START_MS
-    const findingCount = FINDINGS.length
-    for (let i = 0; i < findingCount; i++) {
+    // Findings revealed one by one
+    findings.forEach((_, i) => {
       rt(() => setVisibleFindings(i + 1), FINDING_START_MS + FINDING_INTERVAL_MS * i)
-    }
+    })
 
-    // Progress — tick every PROGRESS_TICK_MS for TOTAL_DURATION_MS
+    // Progress ticks
     const totalTicks = Math.floor(TOTAL_DURATION_MS / PROGRESS_TICK_MS)
     for (let tick = 1; tick <= totalTicks; tick++) {
       rt(() => {
@@ -96,22 +105,23 @@ export function useReasoningSequence({ onComplete }: UseReasoningSequenceOptions
       setIsComplete(true)
       onCompleteRef.current()
     }, TOTAL_DURATION_MS)
-  }, [rt])
+  }, [rt, findings])
 
-  const restart = useCallback(() => {
+  const restart = useCallback((): void => {
     clearAll()
     setVisibleLines(0)
     setTasks(buildInitialTasks(TASK_SCHEDULE))
     setVisibleFindings(0)
     setProgress(0)
     setIsComplete(false)
-    runSequence()
+    // Re-run on next tick so state resets are flushed first
+    setTimeout(runSequence, 0)
   }, [clearAll, runSequence])
 
   useEffect(() => {
     runSequence()
     return clearAll
-  }, [runSequence, clearAll])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  return { visibleLines, tasks, visibleFindings, progress, isComplete, restart }
+  return { visibleLines, tasks, findings, visibleFindings, progress, isComplete, restart }
 }
