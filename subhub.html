@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SubHub Intelligence — MIL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TOKENS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+:root {
+  /* SubcontractorHub brand — electric blue + golden yellow */
+  --brand:   #003CFF;
+  --brand-l: #4d79ff;
+  --brand-d: rgba(0,60,255,0.12);
+  --brand-g: rgba(0,60,255,0.20);
+  /* SubcontractorHub brand accent — golden yellow */
+  --accent:  #FEB517;
+  --accent-l:#ffca3a;
+  --accent-d:rgba(254,181,23,0.13);
+  /* Semantic: warning / near-breach — amber, close to brand yellow */
+  --amber:   #e09a00;
+  --amber-l: #FEB517;
+  --amber-d: rgba(224,154,0,0.12);
+  /* Semantic: critical / breach */
+  --rose:    #dc2626;
+  --rose-d:  rgba(220,38,38,0.10);
+  /* Semantic: success / on-track */
+  --mint:    #059669;
+  --mint-d:  rgba(5,150,105,0.10);
+  /* Semantic: info / neutral */
+  --sky:     #2563eb;
+  --sky-d:   rgba(37,99,235,0.10);
+  --teal:    #0891b2;
+  --teal-d:  rgba(8,145,178,0.10);
+  /* AI insights */
+  --violet:  #7c3aed;
+  --violet-d:rgba(124,58,237,0.10);
+  --fd:      'Syne', system-ui, sans-serif;
+  --fb:      'Plus Jakarta Sans', system-ui, sans-serif;
+  --fm:      'JetBrains Mono', monospace;
+  --r:       10px;
+  --r-sm:    6px;
+  --ease:    0.18s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Dark theme — deep navy, electric blue glows, yellow accents */
+[data-theme="dark"] {
+  --bg:      #04070e;
+  --bg-alt:  #070c18;
+  --surf:    #0a1020;
+  --surf-2:  #0e1628;
+  --surf-3:  #131d32;
+  --border:  #1a2540;
+  --border-2:#233050;
+  --text:    #dce8ff;
+  --text-2:  #7a96c8;
+  --text-3:  #445070;
+  --shadow:  0 4px 28px rgba(0,0,0,0.72);
+  --shadow-sm:0 2px 12px rgba(0,0,0,0.45);
+  --grid-c:  rgba(0,60,255,0.04);
+  --brand-d: rgba(0,60,255,0.15);
+  --accent-d:rgba(254,181,23,0.13);
+  --amber-d: rgba(224,154,0,0.12);
+  --rose-d:  rgba(220,38,38,0.10);
+  --mint-d:  rgba(5,150,105,0.10);
+  --sky-d:   rgba(37,99,235,0.10);
+  --teal-d:  rgba(8,145,178,0.10);
+  --violet-d:rgba(124,58,237,0.12);
+}
+
+/* Light theme — clean white with blue-tinted surfaces */
+[data-theme="light"] {
+  --bg:      #eff3ff;
+  --bg-alt:  #e6ecff;
+  --surf:    #ffffff;
+  --surf-2:  #f5f8ff;
+  --surf-3:  #eaefff;
+  --border:  #d0daff;
+  --border-2:#b8c6f0;
+  --text:    #020c28;
+  --text-2:  #3a507a;
+  --text-3:  #7288b8;
+  --shadow:  0 4px 28px rgba(0,30,120,0.09);
+  --shadow-sm:0 2px 12px rgba(0,30,120,0.06);
+  --grid-c:  rgba(0,60,255,0.04);
+  --brand-d: rgba(0,60,255,0.09);
+  --accent-d:rgba(254,181,23,0.12);
+  --amber-d: rgba(224,154,0,0.09);
+  --rose-d:  rgba(220,38,38,0.07);
+  --mint-d:  rgba(5,150,105,0.08);
+  --sky-d:   rgba(37,99,235,0.07);
+  --teal-d:  rgba(8,145,178,0.08);
+  --violet-d:rgba(124,58,237,0.08);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESET & BASE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;transition:background 0.25s ease,color 0.25s ease}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:2px}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   REASONING SCREEN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#r-screen{
+  position:fixed;inset:0;z-index:9999;
+  background:#030710;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;
+  transition:opacity 0.9s cubic-bezier(0.4,0,0.2,1),transform 0.9s cubic-bezier(0.4,0,0.2,1);
+}
+#r-screen.hiding{opacity:0;transform:scale(1.03);pointer-events:none}
+#r-canvas{position:absolute;inset:0;pointer-events:none;opacity:0.65}
+
+/* Tactical grid bg */
+#r-screen::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(var(--grid-c) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid-c) 1px,transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;
+}
+
+.r-orb{position:absolute;border-radius:50%;pointer-events:none;mix-blend-mode:screen}
+.r-orb-1{width:600px;height:600px;background:radial-gradient(circle,rgba(0,60,255,0.10) 0%,transparent 60%);top:-180px;left:-120px;animation:orbDrift 16s ease-in-out infinite alternate}
+.r-orb-2{width:450px;height:450px;background:radial-gradient(circle,rgba(254,181,23,0.05) 0%,transparent 60%);bottom:-100px;right:-80px;animation:orbDrift 19s ease-in-out infinite alternate-reverse}
+.r-orb-3{width:280px;height:280px;background:radial-gradient(circle,rgba(0,60,255,0.06) 0%,transparent 60%);top:42%;right:22%;animation:orbDrift 24s ease-in-out infinite alternate}
+@keyframes orbDrift{from{transform:translate(0,0)}to{transform:translate(40px,50px)}}
+
+.r-cont{position:relative;z-index:2;width:780px;max-width:calc(100vw - 32px)}
+
+.r-brand{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.r-mark{
+  width:44px;height:44px;border-radius:11px;flex-shrink:0;
+  background:linear-gradient(140deg,#003CFF,#4d79ff);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 32px rgba(0,60,255,0.5);
+  animation:markPulse 3s ease-in-out infinite alternate;
+}
+.r-mark svg{width:22px;height:22px;stroke:#fff}
+@keyframes markPulse{
+  from{box-shadow:0 0 16px rgba(0,60,255,0.28)}
+  to{box-shadow:0 0 60px rgba(0,60,255,0.7),0 0 120px rgba(254,181,23,0.08)}
+}
+.r-brand-text{}
+.r-brand-name{font-family:var(--fd);font-size:18px;font-weight:600;color:#dce8ff;letter-spacing:0.2px}
+.r-brand-sub{font-family:var(--fm);font-size:9.5px;color:#3a5088;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+
+.r-status{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.r-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 9px var(--accent);animation:dotPulse 1.6s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.65)}}
+.r-status-text{font-family:var(--fm);font-size:11px;color:var(--accent-l);letter-spacing:0.3px}
+.r-model{margin-left:auto;font-family:var(--fm);font-size:10px;color:#3a5088;letter-spacing:0.5px}
+
+/* Glass card */
+.r-card{
+  background:rgba(4,8,20,0.92);
+  border:1px solid rgba(0,60,255,0.18);
+  border-radius:18px;overflow:hidden;
+  backdrop-filter:blur(24px);
+  box-shadow:0 0 0 1px rgba(255,255,255,0.02),0 40px 100px rgba(0,0,0,0.75),0 0 90px rgba(0,60,255,0.06);
+}
+
+/* Stream */
+.r-stream{
+  padding:20px 24px;height:200px;overflow-y:auto;
+  font-family:var(--fm);font-size:11.5px;color:#5a7090;
+  line-height:1.85;border-bottom:1px solid rgba(0,60,255,0.14);
+}
+.r-line{display:flex;align-items:flex-start;gap:10px;margin-bottom:1px;opacity:0;transform:translateY(3px);transition:opacity 0.3s ease,transform 0.3s ease}
+.r-line.vis{opacity:1;transform:translateY(0)}
+.r-line .ic{flex-shrink:0;width:13px;text-align:center}
+.r-line.thought{color:#4a6080;font-style:italic}
+.r-line.found{color:#6a88b8}
+.r-line.alert{color:#FEB517}
+.r-line.good{color:#10b981}
+.r-line.bad{color:#ef4444}
+.r-line.hdr{color:var(--brand-l);font-weight:500;margin-top:5px}
+.r-line.dim{color:#2a3850}
+.r-cursor{display:inline-block;width:5px;height:11px;background:var(--accent);margin-left:2px;vertical-align:middle;border-radius:1px;animation:cursBlink 0.9s step-end infinite}
+@keyframes cursBlink{0%,100%{opacity:0.9}50%{opacity:0}}
+
+/* Lower panels */
+.r-lower{display:grid;grid-template-columns:1.15fr 1fr;border-bottom:1px solid rgba(0,60,255,0.12)}
+
+.r-tasks{padding:16px 20px;border-right:1px solid rgba(0,60,255,0.12)}
+.r-find-panel{padding:16px 20px;display:flex;flex-direction:column;gap:6px}
+.r-sec-lbl{font-family:var(--fm);font-size:9px;color:#3a5080;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+
+.r-task{display:flex;align-items:center;gap:8px;padding:3px 0;opacity:0;transform:translateX(-4px);transition:opacity 0.28s ease,transform 0.28s ease}
+.r-task.vis{opacity:1;transform:translateX(0)}
+.r-task-chk{width:17px;height:17px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;transition:all 0.3s ease}
+.r-task-chk.pending{border:1px solid #1e3060;color:#1e3060}
+.r-task-chk.running{border:1px solid var(--brand-l);background:rgba(0,60,255,0.12);color:var(--brand-l);animation:chkGlow 1.2s ease-in-out infinite alternate}
+@keyframes chkGlow{from{box-shadow:none}to{box-shadow:0 0 9px rgba(0,60,255,0.5)}}
+.r-task-chk.done{border:1px solid var(--mint);background:rgba(5,150,105,0.1);color:#22c97c}
+.r-task-lbl{flex:1;font-family:var(--fm);font-size:10px;color:#4a6898;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.r-task-lbl.running{color:#adc4ff}
+.r-task-lbl.done{color:#1e3060;text-decoration:line-through;text-decoration-color:#162448}
+.r-task-val{font-family:var(--fm);font-size:9px;color:#3a5080;white-space:nowrap}
+.r-task-val.done{color:#10b981}
+.r-task-val.running{color:var(--accent-l);animation:valBlink 1.5s ease-in-out infinite}
+@keyframes valBlink{0%,100%{opacity:1}50%{opacity:0.35}}
+
+.r-finding{display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:9.5px;padding:4px 8px;border-radius:5px;border:1px solid;opacity:0;transform:translateX(4px);transition:all 0.3s ease}
+.r-finding.vis{opacity:1;transform:translateX(0)}
+.r-finding.critical{background:var(--rose-d);color:var(--rose);border-color:rgba(194,50,50,0.2)}
+.r-finding.warning{background:var(--amber-d);color:var(--amber);border-color:rgba(200,120,10,0.2)}
+.r-finding.positive{background:var(--mint-d);color:#22c97c;border-color:rgba(26,122,72,0.2)}
+.r-finding.info{background:var(--sky-d);color:var(--sky);border-color:rgba(37,98,168,0.2)}
+
+/* Footer */
+.r-footer{display:flex;align-items:center;gap:18px;padding:14px 24px;background:rgba(2,5,16,0.75)}
+.r-prog-wrap{flex:1}
+.r-prog-meta{display:flex;justify-content:space-between;font-family:var(--fm);font-size:9px;color:#3a5080;margin-bottom:6px}
+.r-prog-track{height:2px;background:rgba(255,255,255,0.05);border-radius:1px;overflow:hidden}
+.r-prog-fill{height:100%;background:linear-gradient(90deg,var(--brand),var(--accent));border-radius:1px;width:0%;transition:width 0.5s ease;box-shadow:0 0 12px rgba(0,60,255,0.5)}
+.r-launch{
+  font-family:var(--fd);font-size:14px;font-weight:600;letter-spacing:0.2px;
+  padding:8px 22px;border-radius:8px;
+  background:linear-gradient(135deg,var(--brand),#2255ff);
+  color:#fff;border:none;cursor:pointer;
+  opacity:0;transform:translateY(4px) scale(0.95);transition:all 0.35s ease;
+  white-space:nowrap;box-shadow:0 4px 24px rgba(0,60,255,0.45);
+}
+.r-launch:hover{background:linear-gradient(135deg,#2255ff,var(--brand-l));box-shadow:0 8px 36px rgba(0,60,255,0.65);transform:translateY(-1px) scale(1.01)}
+.r-launch.ready{opacity:1;transform:translateY(0) scale(1)}
+.r-skip{
+  position:absolute;bottom:24px;right:24px;z-index:3;
+  font-family:var(--fm);font-size:11px;letter-spacing:0.4px;
+  color:#b0a890;cursor:pointer;
+  padding:6px 14px;border-radius:7px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(8px);
+  transition:color 0.2s ease,background 0.2s ease,border-color 0.2s ease;
+}
+.r-skip:hover{color:#ede4d0;background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.22)}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   DASHBOARD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#dash{opacity:0;transition:opacity 0.6s ease;pointer-events:none}
+#dash.visible{opacity:1;pointer-events:auto}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   HEADER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.hdr{
+  position:sticky;top:0;z-index:200;
+  display:grid;grid-template-columns:1fr auto 1fr;
+  align-items:center;gap:16px;
+  padding:0 28px;height:60px;
+  background:rgba(2,5,14,0.96);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(20px);
+  transition:background 0.25s ease,border-color 0.25s ease;
+}
+[data-theme="light"] .hdr{background:rgba(240,244,255,0.97)}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 5%,var(--brand) 25%,var(--accent) 50%,var(--brand) 75%,transparent 95%);opacity:0.7}
+
+.hdr-brand{display:flex;align-items:center;gap:10px}
+.hdr-mark{
+  width:32px;height:32px;border-radius:8px;flex-shrink:0;
+  background:linear-gradient(140deg,#003CFF,#2255ff);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 16px rgba(0,60,255,0.4);
+}
+.hdr-mark svg{width:16px;height:16px}
+.hdr-name{font-family:var(--fd);font-size:15px;font-weight:600}
+.hdr-tag{font-family:var(--fm);font-size:9px;color:var(--text-3);letter-spacing:1px;text-transform:uppercase;margin-top:1px}
+
+.hdr-center{text-align:center}
+.hdr-title{font-family:var(--fb);font-size:14px;font-weight:600;color:var(--text);letter-spacing:0.1px}
+.hdr-sub{font-family:var(--fm);font-size:9px;color:var(--text-3);letter-spacing:0.5px;margin-top:2px}
+
+.hdr-right{display:flex;align-items:center;gap:12px;justify-content:flex-end}
+.live-pill{display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:9.5px;color:var(--text-3);letter-spacing:0.3px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#22c97c;box-shadow:0 0 7px #22c97c;animation:liveBlink 2s ease-in-out infinite}
+@keyframes liveBlink{0%,100%{opacity:1}50%{opacity:0.35}}
+.rerun-btn{
+  display:flex;align-items:center;gap:5px;
+  font-family:var(--fm);font-size:10px;
+  padding:5px 11px;border-radius:6px;
+  background:var(--accent-d);color:var(--accent);
+  border:1px solid rgba(254,181,23,0.22);
+  cursor:pointer;transition:all var(--ease);letter-spacing:0.2px;
+}
+.rerun-btn:hover{background:var(--accent);color:#020c28;border-color:var(--accent)}
+.rerun-ic{transition:transform 0.4s ease}
+.rerun-btn:hover .rerun-ic{transform:rotate(180deg)}
+.theme-btn{
+  width:32px;height:32px;border-radius:8px;
+  background:var(--surf-2);border:1px solid var(--border);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:15px;transition:all var(--ease);flex-shrink:0;
+}
+.theme-btn:hover{background:var(--surf-3);border-color:var(--border-2)}
+.av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--accent));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;flex-shrink:0}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PANEL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.panel{padding:28px;max-width:1480px;margin:0 auto;animation:pIn 0.3s ease}
+@keyframes pIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   STAT CARDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:24px}
+.scard{
+  background:var(--surf);border:1px solid var(--border);border-radius:var(--r);
+  padding:20px 22px 17px;position:relative;overflow:hidden;box-shadow:var(--shadow-sm);
+}
+.scard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.sc-rose::before{background:linear-gradient(90deg,transparent,var(--rose) 50%,transparent)}
+.sc-amber::before{background:linear-gradient(90deg,transparent,var(--amber) 50%,transparent)}
+.sc-mint::before{background:linear-gradient(90deg,transparent,#22c97c 50%,transparent)}
+.sc-sky::before{background:linear-gradient(90deg,transparent,var(--sky) 50%,transparent)}
+.sc-teal::before{background:linear-gradient(90deg,transparent,var(--teal) 50%,transparent)}
+.sc-violet::before{background:linear-gradient(90deg,transparent,var(--violet) 50%,transparent)}
+.scard::after{content:'';position:absolute;top:-18px;right:-18px;width:80px;height:80px;border-radius:50%;opacity:0.04}
+.sc-rose::after{background:var(--rose)}
+.sc-amber::after{background:var(--amber)}
+.sc-mint::after{background:#22c97c}
+.sc-sky::after{background:var(--sky)}
+.sc-teal::after{background:var(--teal)}
+.sc-violet::after{background:var(--violet)}
+
+.slbl{font-family:var(--fm);font-size:9px;color:var(--text-3);letter-spacing:1.1px;text-transform:uppercase;margin-bottom:8px}
+.sval{font-family:var(--fd);font-style:normal;font-weight:700;font-size:50px;line-height:1;letter-spacing:-2px;margin-bottom:6px}
+.sv-rose{color:var(--rose)}.sv-amber{color:var(--amber-l)}.sv-mint{color:#22c97c}.sv-sky{color:var(--sky)}.sv-teal{color:var(--teal)}.sv-violet{color:var(--violet)}
+.snote{font-size:11.5px;color:var(--text-3)}
+.trend-up{color:var(--rose)}.trend-dn{color:#22c97c}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SECTION LABEL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sec-lbl{
+  font-family:var(--fm);font-size:9px;font-weight:500;letter-spacing:1.3px;
+  text-transform:uppercase;color:var(--text-3);
+  margin-bottom:14px;display:flex;align-items:center;gap:10px;
+}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CARDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-sm)}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--border)}
+.card-title{font-family:var(--fb);font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px}
+.card-meta{font-family:var(--fm);font-size:10px;color:var(--text-3)}
+
+/* AI pill */
+.ai-pill{display:flex;align-items:center;gap:4px;font-family:var(--fm);font-size:9px;color:var(--violet);padding:2px 6px;border-radius:9px;background:var(--violet-d);border:1px solid rgba(110,78,192,0.2)}
+.ai-dot{width:5px;height:5px;border-radius:50%;background:var(--violet);box-shadow:0 0 5px var(--violet);animation:liveBlink 1.6s ease-in-out infinite}
+
+/* Sec divider */
+.sdiv{display:flex;align-items:center;gap:9px;padding:7px 18px;background:var(--surf-2);border-bottom:1px solid var(--border);font-family:var(--fm);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text-3)}
+.sdiv-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   BADGES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.bdg{font-family:var(--fm);font-size:9px;padding:2px 6px;border-radius:9px;white-space:nowrap;border:1px solid}
+.b-rose{background:var(--rose-d);color:var(--rose);border-color:rgba(194,50,50,0.25)}
+.b-amber{background:var(--amber-d);color:var(--amber-l);border-color:rgba(200,120,10,0.25)}
+.b-mint{background:var(--mint-d);color:#22c97c;border-color:rgba(26,122,72,0.25)}
+.b-sky{background:var(--sky-d);color:var(--sky);border-color:rgba(37,98,168,0.25)}
+.b-teal{background:var(--teal-d);color:var(--teal);border-color:rgba(14,114,114,0.25)}
+.b-violet{background:var(--violet-d);color:var(--violet);border-color:rgba(110,78,192,0.25)}
+.b-muted{background:var(--surf-3);color:var(--text-3);border-color:var(--border)}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PERF GRID
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.perf-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:24px}
+
+.stage-bars{padding:16px 18px}
+.stage-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.stage-row:last-of-type{margin-bottom:0}
+.stage-name{font-family:var(--fm);font-size:10px;color:var(--text-2);width:84px;flex-shrink:0;text-align:right}
+.stage-track{flex:1;height:6px;background:var(--surf-3);border-radius:3px;overflow:hidden}
+.stage-fill{height:100%;border-radius:3px;transition:width 0.7s cubic-bezier(0.4,0,0.2,1)}
+.stage-val{font-family:var(--fm);font-size:10px;width:38px;text-align:right;flex-shrink:0;font-weight:500}
+.stage-note{margin-top:10px;font-family:var(--fm);font-size:9.5px;color:var(--text-3)}
+
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.kpi-cell{background:var(--surf);padding:14px 16px}
+.kpi-lbl{font-family:var(--fm);font-size:9px;color:var(--text-3);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:4px}
+.kpi-val{font-family:var(--fd);font-style:normal;font-weight:700;font-size:26px;letter-spacing:-1px;line-height:1}
+.kpi-sub{font-size:11px;color:var(--text-3);margin-top:3px}
+
+.spark-wrap{padding:16px 18px}
+svg.spark{width:100%;overflow:visible}
+.spark-labels{display:flex;justify-content:space-between;margin-top:5px}
+.spark-lbl{font-family:var(--fm);font-size:9px;color:var(--text-3)}
+.spark-note{font-family:var(--fm);font-size:9.5px;color:var(--text-3);margin-top:6px}
+
+.team-table{width:100%;border-collapse:collapse}
+.team-table th{text-align:left;padding:8px 18px;font-family:var(--fm);font-size:9px;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-3);background:var(--surf-2);border-bottom:1px solid var(--border)}
+.team-table td{padding:10px 18px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+.team-table tr:last-child td{border-bottom:none}
+.team-table tr:hover td{background:var(--surf-2)}
+.t-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;flex-shrink:0}
+.mini-bar{width:52px;height:4px;background:var(--surf-3);border-radius:2px;overflow:hidden}
+.mini-fill{height:100%;border-radius:2px}
+.trend-arr{font-size:13px}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MAIN GRID
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.main-grid{display:grid;grid-template-columns:1fr 340px;gap:13px}
+.col-stack{display:flex;flex-direction:column;gap:13px}
+.card-scroll{max-height:460px;overflow-y:auto}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ACTION ITEMS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.aitem{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;padding:14px 18px;border-bottom:1px solid var(--border);transition:background var(--ease)}
+.aitem:last-child{border-bottom:none}
+.aitem:hover{background:var(--surf-2)}
+.atag{display:inline-flex;align-items:center;font-family:var(--fm);font-size:9px;letter-spacing:0.9px;text-transform:uppercase;padding:2px 7px;border-radius:9px;margin-bottom:5px;border:1px solid}
+.at-auto{background:var(--mint-d);color:#22c97c;border-color:rgba(26,122,72,0.2)}
+.at-appr{background:var(--amber-d);color:var(--amber-l);border-color:rgba(200,120,10,0.2)}
+.at-block{background:var(--rose-d);color:var(--rose);border-color:rgba(194,50,50,0.2)}
+.at-rej{background:var(--surf-3);color:var(--text-3);border-color:var(--border)}
+.atitle{font-size:13px;font-weight:500;margin-bottom:3px;line-height:1.4}
+.adesc{font-size:12px;color:var(--text-2);line-height:1.5}
+.asent{font-family:var(--fm);font-size:10px;color:#22c97c;margin-top:4px}
+.areason{font-family:var(--fm);font-size:10px;color:var(--text-3);font-style:italic;margin-top:4px}
+.abtns{display:flex;gap:5px;align-items:center;flex-shrink:0;margin-top:2px}
+.btn{font-family:var(--fb);font-size:12px;font-weight:500;padding:5px 11px;border-radius:var(--r-sm);border:1px solid;cursor:pointer;transition:all var(--ease);white-space:nowrap}
+.btn-ok{background:var(--mint-d);color:#22c97c;border-color:rgba(26,122,72,0.25)}
+.btn-ok:hover{background:#22c97c;color:#04030a;border-color:#22c97c}
+.btn-no{background:transparent;color:var(--text-2);border-color:var(--border-2)}
+.btn-no:hover{border-color:var(--rose);color:var(--rose)}
+.btn-chip{cursor:default;font-family:var(--fm);font-size:10px;padding:4px 9px}
+.chip-auto{background:var(--mint-d);color:#22c97c;border-color:rgba(26,122,72,0.25)}
+.chip-block{background:var(--rose-d);color:var(--rose);border-color:rgba(194,50,50,0.25)}
+.chip-rej{background:var(--surf-3);color:var(--text-3);border-color:var(--border)}
+.chip-appr{background:var(--mint-d);color:#22c97c;border-color:rgba(26,122,72,0.25)}
+
+.lm-wrap{padding:10px 18px;border-top:1px solid var(--border);background:var(--surf-2)}
+.lm-btn{width:100%;padding:8px;border-radius:var(--r-sm);background:transparent;border:1px solid var(--border);color:var(--text-2);font-family:var(--fb);font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all var(--ease)}
+.lm-btn:hover{border-color:var(--brand);color:var(--brand-l);background:rgba(0,60,255,0.08)}
+.spinner{display:none;width:12px;height:12px;border:2px solid var(--border-2);border-top-color:var(--brand-l);border-radius:50%;animation:spin 0.6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.lm-btn.loading .spinner{display:block}
+.lm-btn.loading .lm-text{display:none}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ENTITY LIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.eitem{display:flex;align-items:flex-start;gap:11px;padding:12px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background var(--ease)}
+.eitem:last-child{border-bottom:none}
+.eitem:hover{background:var(--surf-2)}
+.e-bar{width:3px;border-radius:2px;align-self:stretch;flex-shrink:0;min-height:36px}
+.e-info{flex:1;min-width:0}
+.e-name{font-size:13px;font-weight:500;margin-bottom:2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.3}
+.e-stage{font-family:var(--fm);font-size:10px;color:var(--text-3);margin-bottom:3px}
+.e-tags{display:flex;gap:8px}
+.e-tag{font-family:var(--fm);font-size:10px;color:var(--text-3)}
+.hbar{width:44px;height:3px;background:var(--surf-3);border-radius:2px;overflow:hidden;flex-shrink:0;align-self:center}
+.hfill{height:100%;border-radius:2px}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   INSIGHTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.ins-item{padding:13px 18px;border-bottom:1px solid var(--border);border-left:2px solid transparent;transition:border-left-color var(--ease),background var(--ease)}
+.ins-item:last-child{border-bottom:none}
+.ins-item:hover{border-left-color:var(--violet);background:rgba(110,78,192,0.022)}
+.ins-head{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.ins-title{font-size:13px;font-weight:600;line-height:1.3}
+.ins-body{font-size:12px;color:var(--text-2);line-height:1.55}
+.ins-foot{display:flex;align-items:center;justify-content:space-between;margin-top:5px}
+.ins-src{font-family:var(--fm);font-size:9.5px;color:var(--text-3)}
+.conf{font-family:var(--fm);font-size:9.5px;padding:1px 6px;border-radius:7px;background:var(--violet-d);color:var(--violet);border:1px solid rgba(110,78,192,0.2)}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     REASONING SCREEN
+══════════════════════════════════════════ -->
+<div id="r-screen">
+  <canvas id="r-canvas"></canvas>
+  <div class="r-orb r-orb-1"></div>
+  <div class="r-orb r-orb-2"></div>
+  <div class="r-orb r-orb-3"></div>
+
+  <div class="r-cont">
+    <div class="r-brand">
+      <div class="r-mark">
+        <svg viewBox="0 0 22 22" fill="none" stroke="#04030a" stroke-width="2" stroke-linecap="round">
+          <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+          <rect x="12" y="3" width="7" height="7" rx="1.5"/>
+          <rect x="3" y="12" width="7" height="7" rx="1.5"/>
+          <path d="M12 15.5h7M15.5 12v7"/>
+        </svg>
+      </div>
+      <div class="r-brand-text">
+        <div class="r-brand-name">SubHub Intelligence</div>
+        <div class="r-brand-sub">MIL · Subcontractor Intelligence</div>
+      </div>
+    </div>
+
+    <div class="r-status">
+      <div class="r-dot" id="r-dot"></div>
+      <span class="r-status-text" id="r-status-text">Initializing context...</span>
+      <span class="r-model">AI Reasoning Engine · ses_2c4f9a</span>
+    </div>
+
+    <div class="r-card">
+      <div class="r-stream" id="r-stream"></div>
+      <div class="r-lower">
+        <div class="r-tasks">
+          <div class="r-sec-lbl">Analysis tasks</div>
+          <div id="r-task-list"></div>
+        </div>
+        <div class="r-find-panel">
+          <div class="r-sec-lbl">Key findings</div>
+          <div id="r-findings"></div>
+        </div>
+      </div>
+      <div class="r-footer">
+        <div class="r-prog-wrap">
+          <div class="r-prog-meta">
+            <span id="r-prog-label">Connecting to data sources...</span>
+            <span id="r-prog-pct">0%</span>
+          </div>
+          <div class="r-prog-track"><div class="r-prog-fill" id="r-prog-fill"></div></div>
+        </div>
+        <button class="r-launch" id="r-launch" onclick="launchDash()">View Dashboard</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="r-skip" onclick="launchDash()">Skip →</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     DASHBOARD
+══════════════════════════════════════════ -->
+<div id="dash">
+
+  <!-- Header -->
+  <header class="hdr">
+    <div class="hdr-brand">
+      <div class="hdr-mark">
+        <svg viewBox="0 0 22 22" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round">
+          <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="12" y="3" width="7" height="7" rx="1.5"/>
+          <rect x="3" y="12" width="7" height="7" rx="1.5"/><path d="M12 15.5h7M15.5 12v7"/>
+        </svg>
+      </div>
+      <div>
+        <div class="hdr-name">SubHub Intelligence</div>
+        <div class="hdr-tag">Management Intelligence Layer</div>
+      </div>
+    </div>
+    <div class="hdr-center">
+      <div class="hdr-title">SubcontractorHub Operations</div>
+      <div class="hdr-sub">63 active projects · Mar 18, 2026</div>
+    </div>
+    <div class="hdr-right">
+      <div class="live-pill"><div class="live-dot"></div>Live</div>
+      <button class="rerun-btn" onclick="rerunAnalysis()">
+        <span class="rerun-ic">↻</span> Re-run analysis
+      </button>
+      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+      <div class="av">AC</div>
+    </div>
+  </header>
+
+  <!-- Panel -->
+  <div class="panel">
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="scard sc-rose">
+        <div class="slbl">SLA Breached</div>
+        <div class="sval sv-rose">4</div>
+        <div class="snote"><span class="trend-up">↑</span> +2 vs last week</div>
+      </div>
+      <div class="scard sc-amber">
+        <div class="slbl">Near Breach &lt;5d</div>
+        <div class="sval sv-amber">7</div>
+        <div class="snote"><span class="trend-up">↑</span> 3 new today</div>
+      </div>
+      <div class="scard sc-sky">
+        <div class="slbl">Active Projects</div>
+        <div class="sval sv-sky">63</div>
+        <div class="snote">+4 this month</div>
+      </div>
+      <div class="scard sc-mint">
+        <div class="slbl">On-Track Rate</div>
+        <div class="sval sv-mint">82%</div>
+        <div class="snote"><span class="trend-up">↓</span> −4% vs last month</div>
+      </div>
+    </div>
+
+    <!-- Performance -->
+    <div class="sec-lbl">Performance Analysis</div>
+    <div class="perf-grid">
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Avg. Days per Stage</div>
+          <div class="card-meta">vs SLA target</div>
+        </div>
+        <div class="stage-bars">
+          <div class="stage-row">
+            <div class="stage-name">Permit</div>
+            <div class="stage-track"><div class="stage-fill" style="width:78%;background:var(--rose)"></div></div>
+            <div class="stage-val" style="color:var(--rose)">26.4d</div>
+          </div>
+          <div class="stage-row">
+            <div class="stage-name">Installation</div>
+            <div class="stage-track"><div class="stage-fill" style="width:55%;background:var(--amber-l)"></div></div>
+            <div class="stage-val" style="color:var(--amber-l)">18.1d</div>
+          </div>
+          <div class="stage-row">
+            <div class="stage-name">PTO</div>
+            <div class="stage-track"><div class="stage-fill" style="width:38%;background:#22c97c"></div></div>
+            <div class="stage-val" style="color:#22c97c">12.4d</div>
+          </div>
+          <div class="stage-row">
+            <div class="stage-name">Completed</div>
+            <div class="stage-track"><div class="stage-fill" style="width:18%;background:var(--sky)"></div></div>
+            <div class="stage-val" style="color:var(--sky)">5.8d</div>
+          </div>
+          <div class="stage-note">SLA targets: Permit 21d · Install 30d · PTO 14d</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Key Performance Indicators</div>
+          <div class="card-meta">Rolling 90 days</div>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi-cell">
+            <div class="kpi-lbl">Avg Cycle Time</div>
+            <div class="kpi-val sv-amber">62.7d</div>
+            <div class="kpi-sub" style="color:var(--rose)">↑ +8.3d vs target</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-lbl">M1 Release Rate</div>
+            <div class="kpi-val sv-mint">91%</div>
+            <div class="kpi-sub" style="color:#22c97c">On schedule</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-lbl">Blocked by Permits</div>
+            <div class="kpi-val sv-rose">18</div>
+            <div class="kpi-sub" style="color:var(--rose)">↑ +6 vs prior Q</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-lbl">Revenue at Risk</div>
+            <div class="kpi-val sv-rose">$186K</div>
+            <div class="kpi-sub">Pending milestones</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">SLA Breach Trend</div>
+          <div class="card-meta">Last 8 weeks</div>
+        </div>
+        <div class="spark-wrap">
+          <svg class="spark" viewBox="0 0 300 65" preserveAspectRatio="none" height="65">
+            <defs>
+              <linearGradient id="gRose" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#c23232" stop-opacity="0.2"/>
+                <stop offset="100%" stop-color="#c23232" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <line x1="0" y1="13" x2="300" y2="13" stroke="var(--grid-c)" stroke-width="1"/>
+            <line x1="0" y1="39" x2="300" y2="39" stroke="var(--grid-c)" stroke-width="1"/>
+            <line x1="0" y1="52" x2="300" y2="52" stroke="var(--grid-c)" stroke-width="1"/>
+            <path d="M0,52 L43,47 L86,43 L129,39 L172,33 L215,26 L258,20 L300,13 L300,65 L0,65 Z" fill="url(#gRose)"/>
+            <polyline points="0,52 43,47 86,43 129,39 172,33 215,26 258,20 300,13" fill="none" stroke="#c23232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="300" cy="13" r="4" fill="#c23232"/>
+            <circle cx="258" cy="20" r="3" fill="#c23232" opacity=".55"/>
+          </svg>
+          <div class="spark-labels">
+            <span class="spark-lbl">W1</span><span class="spark-lbl">W2</span><span class="spark-lbl">W3</span><span class="spark-lbl">W4</span>
+            <span class="spark-lbl">W5</span><span class="spark-lbl">W6</span><span class="spark-lbl">W7</span><span class="spark-lbl">W8</span>
+          </div>
+          <div class="spark-note" style="color:var(--rose)">↑ Breaches accelerating — root cause: permit queue backlog</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Subcontractor Scorecard</div>
+          <div class="card-meta">On-time · delay rate · active</div>
+        </div>
+        <table class="team-table">
+          <thead><tr>
+            <th style="width:28px"></th><th>Contractor</th><th>On-time</th><th>Rate</th><th>Trend</th><th>Status</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td><div class="t-av" style="background:linear-gradient(135deg,#3b82f6,#6366f1)">ST</div></td>
+              <td>SunTech Partners</td><td style="color:#22c97c;font-weight:600">94%</td>
+              <td><div class="mini-bar"><div class="mini-fill" style="width:94%;background:#22c97c"></div></div></td>
+              <td><span class="trend-arr" style="color:#22c97c">↑</span></td>
+              <td><span class="bdg b-mint">Top</span></td>
+            </tr>
+            <tr>
+              <td><div class="t-av" style="background:linear-gradient(135deg,#1ec9b0,#0ea5e9)">GV</div></td>
+              <td>Green Valley Solar</td><td style="color:var(--sky);font-weight:600">87%</td>
+              <td><div class="mini-bar"><div class="mini-fill" style="width:87%;background:var(--sky)"></div></div></td>
+              <td><span class="trend-arr" style="color:var(--text-3)">→</span></td>
+              <td><span class="bdg b-sky">Good</span></td>
+            </tr>
+            <tr>
+              <td><div class="t-av" style="background:linear-gradient(135deg,#c23232,#c8780a)">BF</div></td>
+              <td>Brightfield LLC</td><td style="color:var(--rose);font-weight:600">61%</td>
+              <td><div class="mini-bar"><div class="mini-fill" style="width:61%;background:var(--rose)"></div></div></td>
+              <td><span class="trend-arr" style="color:var(--rose)">↓</span></td>
+              <td><span class="bdg b-rose">⚠ Risk</span></td>
+            </tr>
+            <tr>
+              <td><div class="t-av" style="background:linear-gradient(135deg,#c8780a,#c23232)">PS</div></td>
+              <td>PeakSun Install</td><td style="color:var(--amber-l);font-weight:600">76%</td>
+              <td><div class="mini-bar"><div class="mini-fill" style="width:76%;background:var(--amber-l)"></div></div></td>
+              <td><span class="trend-arr" style="color:var(--rose)">↓</span></td>
+              <td><span class="bdg b-amber">Watch</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div><!-- /perf-grid -->
+
+    <!-- Main grid -->
+    <div class="main-grid">
+
+      <!-- AI Actions -->
+      <div class="col-stack">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">
+              AI Recommended Actions
+              <span class="bdg b-amber">12 total</span>
+              <span class="ai-pill"><span class="ai-dot"></span>AI-powered</span>
+            </div>
+            <div class="card-meta">Reasoning layer · 2m ago</div>
+          </div>
+
+          <div class="sdiv"><span class="sdiv-dot" style="background:#22c97c"></span>Auto-Executing (2)</div>
+          <div class="aitem">
+            <div>
+              <div class="atag at-auto">AUTO · EMAIL</div>
+              <div class="atitle">Overdue notice dispatched → Horizon Solar / PROJ-0241</div>
+              <div class="adesc">Stuck in Permit stage 34 days (SLA: 21d). Automated reminder sent to assigned subcontractor with escalation timeline.</div>
+              <div class="asent">✓ Sent · Mar 18, 09:14 AM</div>
+            </div>
+            <div class="abtns"><span class="btn btn-chip chip-auto">AUTO-EXECUTED</span></div>
+          </div>
+          <div class="aitem">
+            <div>
+              <div class="atag at-auto">AUTO · SLACK</div>
+              <div class="atitle">Risk digest posted to #project-management — 3 projects entering breach zone</div>
+              <div class="adesc">PROJ-0198, PROJ-0213, PROJ-0227 will breach SLA within 5 days.</div>
+              <div class="asent">✓ Sent · Mar 18, 08:00 AM</div>
+            </div>
+            <div class="abtns"><span class="btn btn-chip chip-auto">AUTO-EXECUTED</span></div>
+          </div>
+
+          <div class="sdiv"><span class="sdiv-dot" style="background:var(--amber-l)"></span>Awaiting Approval (5)</div>
+          <div id="sh-approvals">
+            <div class="aitem">
+              <div>
+                <div class="atag at-appr">NEEDS APPROVAL · EMAIL</div>
+                <div class="atitle">Escalate PROJ-0188 to Regional Director — 47 days in Installation</div>
+                <div class="adesc">SLA breach (was 30d). Root cause: inspection rescheduled twice. Draft escalation email to R. Martinez prepared.</div>
+              </div>
+              <div class="abtns">
+                <button class="btn btn-ok" onclick="approveAction(this)">Approve</button>
+                <button class="btn btn-no" onclick="rejectAction(this)">Reject</button>
+              </div>
+            </div>
+            <div class="aitem">
+              <div>
+                <div class="atag at-appr">NEEDS APPROVAL · UPDATE</div>
+                <div class="atitle">Flag PROJ-0251 M2 milestone at risk — PTO blocked, $24K delayed</div>
+                <div class="adesc">Utility confirmation missing 18 days. 20% funding release gated on this. Recommend flagging in system + notifying finance.</div>
+              </div>
+              <div class="abtns">
+                <button class="btn btn-ok" onclick="approveAction(this)">Approve</button>
+                <button class="btn btn-no" onclick="rejectAction(this)">Reject</button>
+              </div>
+            </div>
+            <div class="aitem">
+              <div>
+                <div class="atag at-appr">NEEDS APPROVAL · REASSIGN</div>
+                <div class="atitle">Reassign PROJ-0204 from Brightfield LLC to SunTech Partners</div>
+                <div class="adesc">Brightfield has 4 simultaneous delays. SunTech has confirmed capacity (94% on-time, 12 active projects).</div>
+              </div>
+              <div class="abtns">
+                <button class="btn btn-ok" onclick="approveAction(this)">Approve</button>
+                <button class="btn btn-no" onclick="rejectAction(this)">Reject</button>
+              </div>
+            </div>
+          </div>
+          <div class="lm-wrap" id="lm-sh-appr">
+            <button class="lm-btn" onclick="loadMore('sh-approvals','lm-sh-appr',shMoreApprovals)">
+              <span class="spinner"></span><span class="lm-text">↓ Load 2 more approvals</span>
+            </button>
+          </div>
+
+          <div class="sdiv"><span class="sdiv-dot" style="background:var(--rose)"></span>Cannot Execute (2)</div>
+          <div class="aitem">
+            <div>
+              <div class="atag at-block">BLOCKED · MISSING DATA</div>
+              <div class="atitle">Cannot forecast M1 payment date for PROJ-0266</div>
+              <div class="adesc">Contract funding split not recorded. Unable to compute inflow date or risk score.</div>
+              <div class="areason">⚠ Fix: Add contract terms → SubcontractorHub → PROJ-0266 → Financials</div>
+            </div>
+            <div class="abtns"><span class="btn btn-chip chip-block">BLOCKED</span></div>
+          </div>
+          <div class="aitem">
+            <div>
+              <div class="atag at-block">BLOCKED · PERMISSION</div>
+              <div class="atitle">Cannot update stage for PROJ-0199 — read-only integration</div>
+              <div class="adesc">MIL has no write access to SubcontractorHub for this tenant.</div>
+              <div class="areason">⚠ Fix: Enable write permissions → SubcontractorHub → Integrations → MIL</div>
+            </div>
+            <div class="abtns"><span class="btn btn-chip chip-block">BLOCKED</span></div>
+          </div>
+
+          <div class="sdiv"><span class="sdiv-dot" style="background:var(--text-3)"></span>Recently Rejected (2)</div>
+          <div id="sh-rejected">
+            <div class="aitem">
+              <div>
+                <div class="atag at-rej">REJECTED</div>
+                <div class="atitle">Send cancellation risk notice to client — PROJ-0177</div>
+                <div class="adesc">AI flagged high cancellation risk (74% confidence). PM rejected.</div>
+                <div class="areason">Reason: "Client in active negotiation — premature" · J. Wilkins · Mar 17</div>
+              </div>
+              <div class="abtns"><span class="btn btn-chip chip-rej">REJECTED</span></div>
+            </div>
+          </div>
+          <div class="lm-wrap" id="lm-sh-rej">
+            <button class="lm-btn" onclick="loadMore('sh-rejected','lm-sh-rej',shMoreRejected)">
+              <span class="spinner"></span><span class="lm-text">↓ Load 1 more rejection</span>
+            </button>
+          </div>
+        </div>
+      </div><!-- /left -->
+
+      <!-- Right sidebar -->
+      <div class="col-stack">
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Priority Projects</div>
+            <div class="card-meta">By risk score</div>
+          </div>
+          <div class="card-scroll">
+            <div class="eitem">
+              <div class="e-bar" style="background:var(--rose);box-shadow:0 0 6px var(--rose)"></div>
+              <div class="e-info">
+                <div class="e-name">PROJ-0241 · Rivera Residence <span class="bdg b-rose">BREACH</span></div>
+                <div class="e-stage">Permit → Install · Day 34 / 21d SLA</div>
+                <div class="e-tags"><span class="e-tag">Brightfield</span><span class="e-tag">$42K</span></div>
+              </div>
+              <div class="hbar"><div class="hfill" style="width:12%;background:var(--rose)"></div></div>
+            </div>
+            <div class="eitem">
+              <div class="e-bar" style="background:var(--rose)"></div>
+              <div class="e-info">
+                <div class="e-name">PROJ-0188 · Mendez Commercial <span class="bdg b-rose">BREACH</span></div>
+                <div class="e-stage">Installation · Day 47 / 30d SLA</div>
+                <div class="e-tags"><span class="e-tag">PeakSun</span><span class="e-tag">$118K</span></div>
+              </div>
+              <div class="hbar"><div class="hfill" style="width:8%;background:var(--rose)"></div></div>
+            </div>
+            <div class="eitem">
+              <div class="e-bar" style="background:var(--amber-l)"></div>
+              <div class="e-info">
+                <div class="e-name">PROJ-0251 · Clearwater HOA <span class="bdg b-amber">M2 AT RISK</span></div>
+                <div class="e-stage">PTO · Day 18 / 14d SLA</div>
+                <div class="e-tags"><span class="e-tag">SunTech</span><span class="e-tag">$24K blocked</span></div>
+              </div>
+              <div class="hbar"><div class="hfill" style="width:35%;background:var(--amber-l)"></div></div>
+            </div>
+            <div class="eitem">
+              <div class="e-bar" style="background:var(--amber-l)"></div>
+              <div class="e-info">
+                <div class="e-name">PROJ-0213 · Barnes Estate <span class="bdg b-amber">NEAR BREACH</span></div>
+                <div class="e-stage">Permit · Day 17 / 21d SLA</div>
+                <div class="e-tags"><span class="e-tag">Green Valley</span><span class="e-tag">$67K</span></div>
+              </div>
+              <div class="hbar"><div class="hfill" style="width:44%;background:var(--amber-l)"></div></div>
+            </div>
+            <div class="eitem">
+              <div class="e-bar" style="background:var(--sky)"></div>
+              <div class="e-info">
+                <div class="e-name">PROJ-0227 · Torres Warehouse</div>
+                <div class="e-stage">Installation · Day 22 / 30d SLA</div>
+                <div class="e-tags"><span class="e-tag">SunTech</span><span class="e-tag">$89K</span></div>
+              </div>
+              <div class="hbar"><div class="hfill" style="width:68%;background:var(--sky)"></div></div>
+            </div>
+            <div class="eitem">
+              <div class="e-bar" style="background:#22c97c"></div>
+              <div class="e-info">
+                <div class="e-name">PROJ-0233 · Linwood Apartments</div>
+                <div class="e-stage">PTO · Day 8 / 14d SLA</div>
+                <div class="e-tags"><span class="e-tag">Green Valley</span><span class="e-tag">$56K</span></div>
+              </div>
+              <div class="hbar"><div class="hfill" style="width:88%;background:#22c97c"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">AI Insights <span class="ai-pill"><span class="ai-dot"></span>6 findings</span></div>
+            <div class="card-meta">AI Analysis</div>
+          </div>
+          <div class="ins-item">
+            <div class="ins-head"><span>🔴</span><div class="ins-title">Systemic permit delay — Brightfield + County link</div></div>
+            <div class="ins-body">3 of Brightfield's 7 active projects stuck in Permit with the same inspector rescheduling pattern. Not random — likely relationship/process issue with county office.</div>
+            <div class="ins-foot"><span class="ins-src">stage_duration_analysis</span><span class="conf">91% confidence</span></div>
+          </div>
+          <div class="ins-item">
+            <div class="ins-head"><span>💰</span><div class="ins-title">$42K M1 release tracking 12 days late</div></div>
+            <div class="ins-body">PROJ-0241 funding trigger requires installation completion. Current trajectory misses trigger by 12 days.</div>
+            <div class="ins-foot"><span class="ins-src">milestone_forecast</span><span class="conf">84% confidence</span></div>
+          </div>
+          <div class="ins-item">
+            <div class="ins-head"><span>📈</span><div class="ins-title">SunTech resolves PTO 40% faster than baseline</div></div>
+            <div class="ins-body">SunTech averages 8.2d in PTO vs. team baseline of 13.7d across 12 active projects. Route high-value PTO work to them.</div>
+            <div class="ins-foot"><span class="ins-src">performance_analyzer</span><span class="conf">96% confidence</span></div>
+          </div>
+        </div>
+
+      </div><!-- /right -->
+    </div><!-- /main-grid -->
+  </div><!-- /panel -->
+</div><!-- /dash -->
+
+<script>
+// ── LOAD MORE DATA ─────────────────────────────────────────────
+const shMoreApprovals = [
+  { type:'at-appr', label:'NEEDS APPROVAL · REPORT',  title:'Generate weekly SLA summary report for client portfolio review', desc:'15 projects require PM narrative update before Friday board meeting. AI-drafted summaries ready for each, pending approval to publish.' },
+  { type:'at-appr', label:'NEEDS APPROVAL · UPDATE',  title:'Mark PROJ-0199 milestone complete — Installation sign-off received', desc:'Physical sign-off document uploaded by field team. System has not been updated. Approving will trigger M1 payment request ($34,000).' },
+];
+const shMoreRejected = [
+  { type:'at-rej', label:'REJECTED', title:'Pause new project intake for Brightfield LLC until performance review', desc:'AI flagged Brightfield as systemic risk (61% on-time, 4 active delays).', reason:'Reason: "Contractual obligation to continue — reviewing internally" · R. Martinez · Mar 10' },
+];
+
+// ── THEME TOGGLE ──────────────────────────────────────────────
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
+}
+
+function loadMore(containerId, wrapperId, items) {
+  const btn = document.querySelector(`#${wrapperId} .lm-btn`);
+  btn.classList.add('loading');
+  setTimeout(() => {
+    const container = document.getElementById(containerId);
+    items.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'aitem';
+      el.style.cssText = 'opacity:0;transform:translateY(5px);transition:opacity 0.25s ease,transform 0.25s ease';
+      const reasonHtml = item.reason ? `<div class="areason">${item.reason}</div>` : '';
+      const btnsHtml = item.type === 'at-appr'
+        ? `<button class="btn btn-ok" onclick="approveAction(this)">Approve</button><button class="btn btn-no" onclick="rejectAction(this)">Reject</button>`
+        : `<span class="btn btn-chip chip-rej">REJECTED</span>`;
+      el.innerHTML = `<div><div class="atag ${item.type}">${item.label}</div><div class="atitle">${item.title}</div><div class="adesc">${item.desc}</div>${reasonHtml}</div><div class="abtns">${btnsHtml}</div>`;
+      container.appendChild(el);
+      requestAnimationFrame(() => { el.style.opacity='1'; el.style.transform='translateY(0)'; });
+    });
+    document.getElementById(wrapperId).remove();
+  }, 700);
+}
+
+// ── ACTION INTERACTIONS ────────────────────────────────────────
+function approveAction(btn) {
+  const item = btn.closest('.aitem');
+  item.querySelector('.atag').className = 'atag at-auto';
+  item.querySelector('.atag').textContent = 'APPROVED · QUEUED';
+  item.querySelector('.abtns').innerHTML = '<span class="btn btn-chip chip-appr">✓ APPROVED</span>';
+  item.style.transition = 'opacity 0.3s';
+  item.style.opacity = '0.6';
+  setTimeout(() => item.style.opacity = '1', 330);
+}
+function rejectAction(btn) {
+  const item = btn.closest('.aitem');
+  item.querySelector('.atag').className = 'atag at-rej';
+  item.querySelector('.atag').textContent = 'REJECTED';
+  item.querySelector('.abtns').innerHTML = '<span class="btn btn-chip chip-rej">REJECTED</span>';
+  const note = document.createElement('div');
+  note.className = 'areason'; note.textContent = '↳ Rejection recorded · prompt improvement candidate queued';
+  item.querySelector('.adesc').after(note);
+  item.style.transition = 'opacity 0.3s'; item.style.opacity = '0.45';
+}
+
+// ── NEURAL CANVAS ──────────────────────────────────────────────
+const canvas = document.getElementById('r-canvas');
+const cx = canvas.getContext('2d');
+let parts = [], raf;
+
+function resizeCvs() { canvas.width = innerWidth; canvas.height = innerHeight; }
+
+class P {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random()-.5)*0.26;
+    this.vy = (Math.random()-.5)*0.26;
+    this.r  = Math.random()*1.7+0.7;
+    this.warm = Math.random()>.45;
+  }
+  update() {
+    this.x+=this.vx; this.y+=this.vy;
+    if(this.x<0||this.x>canvas.width) this.vx*=-1;
+    if(this.y<0||this.y>canvas.height) this.vy*=-1;
+  }
+  draw() {
+    cx.beginPath(); cx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    cx.fillStyle = this.warm ? 'rgba(254,181,23,0.45)' : 'rgba(0,60,255,0.35)';
+    cx.fill();
+  }
+}
+
+function initP() { parts = Array.from({length:50},()=>new P()); }
+function drawNeural() {
+  cx.clearRect(0,0,canvas.width,canvas.height);
+  for(let i=0;i<parts.length;i++) {
+    for(let j=i+1;j<parts.length;j++) {
+      const dx=parts[i].x-parts[j].x, dy=parts[i].y-parts[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<120) {
+        cx.beginPath(); cx.moveTo(parts[i].x,parts[i].y); cx.lineTo(parts[j].x,parts[j].y);
+        cx.strokeStyle=`rgba(0,60,255,${(1-d/120)*0.14})`; cx.lineWidth=1; cx.stroke();
+      }
+    }
+  }
+  parts.forEach(p=>{p.update();p.draw();});
+  raf=requestAnimationFrame(drawNeural);
+}
+function stopNeural() { if(raf) cancelAnimationFrame(raf); }
+window.addEventListener('resize', ()=>{resizeCvs();initP();});
+resizeCvs(); initP();
+
+// ── REASONING ENGINE ──────────────────────────────────────────
+const STREAM = [
+  {cls:'hdr',  ic:'⬡', text:'Loading tenant context... workspace: SubcontractorHub · role: PM'},
+  {cls:'thought',ic:'·', text:'pulling SubcontractorHub data — projects, permits, milestones, contractor assignments...'},
+  {cls:'found',  ic:'→', text:'SubcontractorHub API: 63 active projects ingested · last sync 2m ago'},
+  {cls:'found',  ic:'→', text:'4 contractor entities · 11 permit-stage projects · 274 total entities normalized'},
+  {cls:'thought',ic:'·', text:'the permit stage numbers are elevated... baseline was 19.8d last quarter, now 26.4d'},
+  {cls:'alert',  ic:'⚠', text:'Permit avg 26.4d — exceeds 21d SLA target · 3 projects share same inspector pattern'},
+  {cls:'thought',ic:'·', text:'cross-referencing contractor assignments... this feels systemic, not isolated incidents'},
+  {cls:'bad',    ic:'✗', text:'Brightfield LLC: 61% on-time · 4 concurrent delays · confidence 91% — systemic flag'},
+  {cls:'good',   ic:'✓', text:'SunTech Partners: 94% on-time · PTO stage 40% faster than baseline — routing candidate'},
+  {cls:'thought',ic:'·', text:'milestone tracking — checking M1/M2 funding gates across active portfolio...'},
+  {cls:'alert',  ic:'⚠', text:'$186K revenue at risk across 7 projects with blocked milestone conditions'},
+  {cls:'thought',ic:'·', text:'generating action recommendations... auto-classifying by confidence and reversibility...'},
+  {cls:'good',   ic:'✓', text:'12 total actions generated · 2 auto-dispatched · 5 queued for approval · 2 blocked'},
+  {cls:'dim',    ic:'·', text:'audit log updated · session_id: ses_2c4f9a · render ready'},
+];
+
+const TASKS = [
+  'Connect to SubcontractorHub API',
+  'Ingest & normalize 63 projects',
+  'SLA breach detection (all stages)',
+  'Outlier & anomaly analysis',
+  'Contractor performance scoring',
+  'Milestone & financial tracking',
+  'Action classification & dispatch',
+];
+const TASK_SCHED = [
+  {i:0,s:180, d:1600},{i:1,s:1400,d:3000},{i:2,s:2600,d:5000},
+  {i:3,s:4000,d:6800},{i:4,s:5600,d:8400},{i:5,s:7600,d:9800},{i:6,s:9200,d:11600},
+];
+const FINDINGS = [
+  {cls:'critical',ic:'🔴',text:'4 SLA breaches active'},
+  {cls:'critical',ic:'🔴',text:'Brightfield systemic risk'},
+  {cls:'warning', ic:'🟡',text:'$186K revenue at risk'},
+  {cls:'warning', ic:'🟡',text:'Permit avg 26.4d (+5.4d)'},
+  {cls:'positive',ic:'🟢',text:'SunTech top performer 94%'},
+  {cls:'info',    ic:'🔵',text:'12 actions generated'},
+];
+const PROG_LABELS = [
+  'Connecting to SubHub API...','Ingesting 63 projects...','Running SLA analysis...',
+  'Detecting anomalies...','Scoring contractors...','Tracking milestones...',
+  'Classifying actions...','Analysis complete ✓',
+];
+
+let rTos = [];
+function rt(fn,d){const id=setTimeout(fn,d);rTos.push(id);return id;}
+function clearRt(){rTos.forEach(clearTimeout);rTos=[];}
+
+function startReasoning() {
+  clearRt(); stopNeural();
+  const scr = document.getElementById('r-screen');
+  const dsh = document.getElementById('dash');
+  scr.classList.remove('hiding'); scr.style.display='flex'; scr.style.pointerEvents='';
+  dsh.classList.remove('visible'); dsh.style.pointerEvents='none';
+
+  document.getElementById('r-stream').innerHTML='';
+  document.getElementById('r-task-list').innerHTML='';
+  document.getElementById('r-findings').innerHTML='';
+  document.getElementById('r-prog-fill').style.width='0%';
+  document.getElementById('r-prog-pct').textContent='0%';
+  document.getElementById('r-prog-label').textContent=PROG_LABELS[0];
+  document.getElementById('r-status-text').textContent='Initializing context...';
+  document.getElementById('r-launch').classList.remove('ready');
+  const dot=document.getElementById('r-dot');dot.style.cssText='';
+
+  resizeCvs(); initP(); drawNeural();
+
+  // Build tasks
+  const tl=document.getElementById('r-task-list');
+  TASKS.forEach((t,i)=>{
+    const el=document.createElement('div');
+    el.className='r-task';el.id=`rt-${i}`;
+    el.innerHTML=`<div class="r-task-chk pending" id="rtc-${i}">○</div><div class="r-task-lbl" id="rtl-${i}">${t}</div><div class="r-task-val" id="rtv-${i}">—</div>`;
+    tl.appendChild(el);
+    rt(()=>el.classList.add('vis'),70+i*60);
+  });
+
+  // Stream
+  const se=document.getElementById('r-stream');
+  let cur=null;
+  STREAM.forEach((line,i)=>{
+    rt(()=>{
+      if(cur) cur.remove();
+      const el=document.createElement('div');
+      el.className=`r-line ${line.cls}`;
+      el.innerHTML=`<span class="ic">${line.ic}</span><span>${line.text}</span>`;
+      se.appendChild(el);
+      requestAnimationFrame(()=>el.classList.add('vis'));
+      cur=document.createElement('span');cur.className='r-cursor';el.appendChild(cur);
+      se.scrollTop=se.scrollHeight;
+      document.getElementById('r-status-text').textContent=
+        ['Connecting to sources...','Normalizing entities...','Running SLA checks...','Detecting anomalies...','Correlating patterns...','Scoring performance...','Classifying actions...','Finalizing insights...','Analysis complete...','Cross-referencing...','Computing confidence...','Preparing dashboard...','Audit logging...'][i%13];
+    },260+i*670);
+  });
+
+  // Task transitions
+  const doneTexts=['connected','63 ingested','11 breaches','8 outliers','4 scored','7 flagged','12 actions'];
+  TASK_SCHED.forEach(s=>{
+    rt(()=>{
+      const chk=document.getElementById(`rtc-${s.i}`), lbl=document.getElementById(`rtl-${s.i}`), val=document.getElementById(`rtv-${s.i}`);
+      if(!chk)return;
+      chk.className='r-task-chk running';chk.textContent='◌';
+      lbl.className='r-task-lbl running';val.className='r-task-val running';val.textContent='running...';
+    },s.s);
+    rt(()=>{
+      const chk=document.getElementById(`rtc-${s.i}`), lbl=document.getElementById(`rtl-${s.i}`), val=document.getElementById(`rtv-${s.i}`);
+      if(!chk)return;
+      chk.className='r-task-chk done';chk.textContent='✓';
+      lbl.className='r-task-lbl done';val.className='r-task-val done';val.textContent=doneTexts[s.i]||'done';
+    },s.d);
+  });
+
+  // Progress bar
+  const TOTAL=12000, STEPS=36;
+  for(let s=0;s<=STEPS;s++){
+    ((step)=>rt(()=>{
+      const pct=Math.round((step/STEPS)*100);
+      document.getElementById('r-prog-fill').style.width=pct+'%';
+      document.getElementById('r-prog-pct').textContent=pct+'%';
+      const li=Math.min(Math.floor((step/STEPS)*(PROG_LABELS.length-1)),PROG_LABELS.length-2);
+      document.getElementById('r-prog-label').textContent=PROG_LABELS[li];
+    },(step/STEPS)*TOTAL))(s);
+  }
+
+  // Findings
+  rt(()=>{
+    const fe=document.getElementById('r-findings');
+    FINDINGS.forEach((f,i)=>{
+      const el=document.createElement('div');
+      el.className=`r-finding ${f.cls}`;
+      el.innerHTML=`<span>${f.ic}</span><span>${f.text}</span>`;
+      fe.appendChild(el);
+      rt(()=>el.classList.add('vis'),i*180);
+    });
+  },TOTAL-2800);
+
+  // Final
+  rt(()=>{
+    document.getElementById('r-prog-fill').style.width='100%';
+    document.getElementById('r-prog-pct').textContent='100%';
+    document.getElementById('r-prog-label').textContent=PROG_LABELS[PROG_LABELS.length-1];
+    document.getElementById('r-status-text').textContent='Analysis complete — 12 actions ready';
+    dot.style.background='#22c97c';dot.style.boxShadow='0 0 10px #22c97c';dot.style.animation='none';
+    if(cur) cur.remove();
+    document.getElementById('r-launch').classList.add('ready');
+  },TOTAL);
+}
+
+function launchDash() {
+  clearRt(); stopNeural();
+  const scr=document.getElementById('r-screen');
+  const dsh=document.getElementById('dash');
+  // Remove the screen from layout immediately — no timeout that could race with interactions
+  scr.style.display='none';
+  dsh.style.pointerEvents=''; // clear the inline override set by startReasoning()
+  dsh.classList.add('visible');
+  window.scrollTo({top:0});
+}
+
+function rerunAnalysis() {
+  const scr=document.getElementById('r-screen');
+  const dsh=document.getElementById('dash');
+  dsh.classList.remove('visible');
+  scr.style.cssText='display:flex'; // clear any inline overrides, show screen
+  startReasoning();
+}
+
+document.addEventListener('DOMContentLoaded', startReasoning);
+</script>
+</body>
+</html>
